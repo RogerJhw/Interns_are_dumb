@@ -166,7 +166,6 @@ if st.button:
         st.error("Unable to generate HTML preview for the given article.")
     
     
-    components.html(raw_html_content, height=300, scrolling=True) # Adjust height and scrolling as needed
 
 
 
