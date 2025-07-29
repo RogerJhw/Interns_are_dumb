@@ -153,6 +153,8 @@ def generate_and_display_clip(url):
 # UI: Input box + button
 user_url = st.text_input("Place URL here")
 
+arts = []
+
 run = st.button("Run script")
 
 if run:
@@ -161,11 +163,16 @@ if run:
     my_ipython_html_object = output
     if my_ipython_html_object and hasattr(my_ipython_html_object, '_repr_html_'):
         raw_html_content = my_ipython_html_object._repr_html_()
-        components.html(raw_html_content, height=300, scrolling=True)
+        arts.append(components.html(raw_html_content, height=300, scrolling=True))
     else:
         st.error("Unable to generate HTML preview for the given article.")
-    
-    
+
+n = 1
+
+for art in arts:
+    st.write(f'Article {n}')
+    art
+    st.divider()
 
 
 
