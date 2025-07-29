@@ -148,6 +148,7 @@ def generate_and_display_clip(url):
 
     except Exception as e:
         print(f"Error processing {url}: {e}\n")
+        return HTML("<div style='color:red;'>Failed to process article. Please check the URL.</div>")
 
 # UI: Input box + button
 user_url = st.text_input("Place URL here")
@@ -158,7 +159,14 @@ if st.button:
     #clean_url = user_url.value.strip()
     output = generate_and_display_clip(user_url)
     my_ipython_html_object = output
-    raw_html_content = my_ipython_html_object._repr_html_()
+    if my_ipython_html_object and hasattr(my_ipython_html_object, '_repr_html_'):
+        raw_html_content = my_ipython_html_object._repr_html_()
+        components.html(raw_html_content, height=300, scrolling=True)
+    else:
+        st.error("Unable to generate HTML preview for the given article.")
+    
     
     components.html(raw_html_content, height=300, scrolling=True) # Adjust height and scrolling as needed
+
+
 
