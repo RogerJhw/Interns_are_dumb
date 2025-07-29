@@ -148,7 +148,7 @@ def generate_and_display_clip(url):
 
     except Exception as e:
         print(f"Error processing {url}: {e}\n")
-        return HTML("<div style='color:red;'>Failed to process article. Please check the URL.</div>")
+    
 
 # UI: Input box + button
 user_url = st.text_input("Place URL here")
