@@ -202,7 +202,7 @@ with col1:
         else:
             st.error("Unable to generate HTML preview for the given article.")
         # Display your articles here
-    for i, art in enumerate(arts, 1):
+    for i, art in enumerate(st.session_state.arts, 1):
         st.write(f'**Article {i}**')
         components.html(art, height=300, scrolling=True)
         st.divider()
