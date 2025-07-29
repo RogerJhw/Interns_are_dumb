@@ -170,7 +170,7 @@ if run:
 
 for i, art in enumerate(st.session_state.arts, 1):
     st.write(f'Article {i}')
-    components.html(art, height=300, scrolling=True)
+    components.html(art, height=200, scrolling=True)
     st.divider()
 
 
