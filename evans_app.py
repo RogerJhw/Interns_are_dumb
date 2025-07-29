@@ -153,7 +153,8 @@ def generate_and_display_clip(url):
 # UI: Input box + button
 user_url = st.text_input("Place URL here")
 
-arts = []
+if 'arts' not in st.session_state:
+    st.session_state.arts = []
 
 run = st.button("Run script")
 
@@ -163,11 +164,11 @@ if run:
     my_ipython_html_object = output
     if my_ipython_html_object and hasattr(my_ipython_html_object, '_repr_html_'):
         raw_html_content = my_ipython_html_object._repr_html_()
-        arts.append(raw_html_content)
+        st.session_states.arts.append(raw_html_content)
     else:
         st.error("Unable to generate HTML preview for the given article.")
 
-for i, art in enumerate(arts, 1):
+for i, art in enumerate(st.session_state.arts, 1):
     st.write(f'Article {i}')
     components.html(art, height=300, scrolling=True)
     st.divider()
