@@ -15,7 +15,7 @@ nltk.download('punkt')
 
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 
-csv_path = "/Users/rogerwhite/Desktop/source_map.csv"
+csv_path = "source_map.csv"
 
 # Load source map
 def load_source_map(csv_path):
