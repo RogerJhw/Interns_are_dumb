@@ -225,8 +225,8 @@ with col2:
 
             if domain not in seen_domains:
                 seen_domains.add(domain)
-                st.markdown(f"🔗 **{domain}**")
-                st.caption(f"📅 Last failed: {date_only}")
+                st.markdown(f"**{domain}**")
+                st.caption(f"Last failed: {date_only}")
                 st.markdown("---")
     except Exception as e:
         st.error("Failed to load error log.")
