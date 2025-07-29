@@ -29,6 +29,13 @@ from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 csv_path = "source_map.csv"
 
 # Load source map
+def get_domain(url):
+    try:
+        parsed = urlparse(url)
+        return parsed.netloc.replace("www.", "")
+    except:
+        return "invalid-url"
+
 def load_source_map(csv_path):
     source_map = {}
     with open(csv_path, mode='r') as file:
@@ -207,12 +214,18 @@ with col1:
 with col2:
     st.write("❌ Failed URLs")
     try:
-        data = supabase.table("failed_urls").select("*").order("timestamp", desc=True).limit(5).execute()
+        data = supabase.table("failed_urls").select("url", "timestamp").order("timestamp", desc=True).limit(5).execute()
+        seen_domains = set()
+
         for row in data.data:
-            st.write(f"📅 {row['timestamp'][:19]}")
-            st.markdown(f"[🔗 {row['url']}]({row['url']})", unsafe_allow_html=True)
-            st.caption(f"Error: `{row['error_msg'][:100]}`")
-            st.markdown("---")
+            domain = get_domain(row['url'])
+            date_only = row['timestamp'][:10]  # Just YYYY-MM-DD
+
+            if domain not in seen_domains:
+                seen_domains.add(domain)
+                st.markdown(f"🔗 **{domain}**")
+                st.caption(f"📅 Last failed: {date_only}")
+                st.markdown("---")
     except Exception as e:
         st.error("Failed to load error log.")
 
