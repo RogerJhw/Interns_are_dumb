@@ -205,7 +205,7 @@ with col1:
         st.divider()
 
 with col2:
-    st.subheader("❌ Failed URLs")
+    st.write("❌ Failed URLs")
     try:
         data = supabase.table("failed_urls").select("*").order("timestamp", desc=True).limit(5).execute()
         for row in data.data:
