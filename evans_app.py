@@ -162,8 +162,7 @@ if run:
     output = generate_and_display_clip(user_url)
     my_ipython_html_object = output
     if my_ipython_html_object and hasattr(my_ipython_html_object, '_repr_html_'):
-        raw_html_content = my_ipython_html_object._repr_html_()
-        arts.append(components.html(raw_html_content, height=300, scrolling=True))
+        arts.append(raw_html_content = my_ipython_html_object._repr_html_())
     else:
         st.error("Unable to generate HTML preview for the given article.")
 
