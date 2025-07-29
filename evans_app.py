@@ -11,6 +11,17 @@ import nltk
 import ipywidgets as widgets
 import streamlit.components.v1 as components
 
+import os
+from supabase import create_client
+from dotenv import load_dotenv
+
+load_dotenv()
+
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(supabase_url, supabase_key)
+
 nltk.download('punkt')
 
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
@@ -147,7 +158,28 @@ def generate_and_display_clip(url):
         return format_clip(title, url, authors, domain, date, body.strip())
 
     except Exception as e:
-        print(f"Error processing {url}: {e}\n")
+        error_msg = str(e)
+        print(f"Error processing {url}: {error_msg}\n")
+
+        try:
+            # Check for existing record
+            existing = supabase.table("failed_urls").select("id").eq("url", url).execute()
+
+            if not existing.data:
+                # Only insert if not already logged
+                supabase.table("failed_urls").insert({
+                    "url": url,
+                    "error_msg": error_msg,
+                    "timestamp": datetime.datetime.utcnow().isoformat()
+                }).execute()
+            else:
+                print(f"URL already exists in database: {url}")
+
+        except Exception as supa_err:
+            print(f"Supabase insert failed: {supa_err}")
+
+        return None
+
     
 
 # UI: Input box + button
@@ -156,22 +188,37 @@ user_url = st.text_input("Place URL here")
 if 'arts' not in st.session_state:
     st.session_state.arts = []
 
-run = st.button("Run script")
+col1, col2 = st.columns([3, 1])  # Main content | Error log
 
-if run:
-    #clean_url = user_url.value.strip()
-    output = generate_and_display_clip(user_url)
-    my_ipython_html_object = output
+with col1:
+    run = st.button("Run script")
+    if run:
+
+        output = generate_and_display_clip(user_url)
+        my_ipython_html_object = output
     if my_ipython_html_object and hasattr(my_ipython_html_object, '_repr_html_'):
         raw_html_content = my_ipython_html_object._repr_html_()
         st.session_state.arts.append(raw_html_content)
     else:
         st.error("Unable to generate HTML preview for the given article.")
+    # Display your articles here
+    for i, art in enumerate(arts, 1):
+        st.write(f'**Article {i}**')
+        components.html(art, height=300, scrolling=True)
+        st.divider()
 
-for i, art in enumerate(st.session_state.arts, 1):
-    st.write(f'Article {i}')
-    components.html(art, height=200, scrolling=True)
-    st.divider()
+with col2:
+    st.subheader("❌ Failed URLs")
+    try:
+        data = supabase.table("failed_urls").select("*").order("timestamp", desc=True).limit(5).execute()
+        for row in data.data:
+            st.write(f"📅 {row['timestamp'][:19]}")
+            st.markdown(f"[🔗 {row['url']}]({row['url']})", unsafe_allow_html=True)
+            st.caption(f"Error: `{row['error_msg'][:100]}`")
+            st.markdown("---")
+    except Exception as e:
+        st.error("Failed to load error log.")
+
 
 
 
