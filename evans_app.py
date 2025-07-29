@@ -153,9 +153,9 @@ def generate_and_display_clip(url):
 # UI: Input box + button
 user_url = st.text_input("Place URL here")
 
-st.button("Run script")
+run = st.button("Run script")
 
-if st.button:
+if run:
     #clean_url = user_url.value.strip()
     output = generate_and_display_clip(user_url)
     my_ipython_html_object = output
