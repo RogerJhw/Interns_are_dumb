@@ -167,11 +167,9 @@ if run:
     else:
         st.error("Unable to generate HTML preview for the given article.")
 
-n = 1
-
-for art in arts:
-    st.write(f'Article {n}')
-    art
+for i, art in enumerate(arts, 1):
+    st.write(f'Article {i}')
+    components.html(art, height=300, scrolling=True)
     st.divider()
 
 
