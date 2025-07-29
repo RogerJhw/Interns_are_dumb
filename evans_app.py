@@ -180,17 +180,14 @@ def generate_and_display_clip(url):
 
         return None
 
-    
-
-# UI: Input box + button
-user_url = st.text_input("Place URL here")
-
 if 'arts' not in st.session_state:
     st.session_state.arts = []
 
 col1, col2 = st.columns([3, 1])  # Main content | Error log
 
 with col1:
+    user_url = st.text_input("Place URL here")
+
     run = st.button("Run script")
     if run:
 
