@@ -15,6 +15,8 @@ import os
 from supabase import create_client
 from dotenv import load_dotenv
 
+st.set_page_config(page_title="ABA Clips", page_icon="📰")
+
 load_dotenv()
 
 supabase_url = os.getenv("SUPABASE_URL")
